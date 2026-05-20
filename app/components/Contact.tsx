@@ -7,7 +7,7 @@ import {
 
 interface ContactItem {
   id: string;
-  Icon: React.ElementType;
+  Icon: React.ComponentType<{ style?: React.CSSProperties }>;
   label: string;
   value: string;
   href: string;
