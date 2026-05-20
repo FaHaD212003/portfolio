@@ -13,7 +13,7 @@ import { VscTerminalPowershell } from 'react-icons/vsc';
 
 interface Skill {
   name: string;
-  Icon: React.ElementType;
+  Icon: React.ComponentType<{ style?: React.CSSProperties }>;
   color: string;
 }
 
