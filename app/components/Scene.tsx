@@ -23,36 +23,36 @@ function IcosahedronMesh({ mouse }: { mouse: React.MutableRefObject<[number, num
   });
 
   return (
-    <group>
+    <group position={[1.2, 0, 0]}>
       {/* Core wireframe */}
       <mesh ref={meshRef}>
-        <icosahedronGeometry args={[1.5, 1]} />
+        <icosahedronGeometry args={[1.8, 1]} />
         <meshBasicMaterial
           color="#00f5ff"
           wireframe
           transparent
-          opacity={0.85}
+          opacity={0.75}
         />
       </mesh>
 
       {/* Outer glow sphere */}
       <mesh ref={outerRef}>
-        <icosahedronGeometry args={[1.8, 1]} />
+        <icosahedronGeometry args={[2.2, 1]} />
         <meshBasicMaterial
           color="#00c8d4"
           wireframe
           transparent
-          opacity={0.2}
+          opacity={0.15}
         />
       </mesh>
 
-      {/* Inner solid with distort for depth */}
+      {/* Inner solid */}
       <mesh>
-        <icosahedronGeometry args={[1.1, 1]} />
+        <icosahedronGeometry args={[1.3, 1]} />
         <meshStandardMaterial
           color="#050508"
           emissive="#00f5ff"
-          emissiveIntensity={0.08}
+          emissiveIntensity={0.07}
           roughness={0.9}
           metalness={0.1}
         />
@@ -68,7 +68,7 @@ function ParticleRing() {
     const count = 200;
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2;
-      const r = 3 + Math.random() * 0.5;
+      const r = 3.4 + Math.random() * 0.4;
       pts.push(
         new THREE.Vector3(
           Math.cos(angle) * r,
@@ -141,10 +141,9 @@ export default function Scene() {
     <div
       onMouseMove={handleMouseMove}
       style={{
+        flex: 1,
         width: '100%',
         height: '100%',
-        minHeight: '480px',
-        borderRadius: '24px',
         overflow: 'hidden',
         position: 'relative',
       }}
@@ -156,8 +155,8 @@ export default function Scene() {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '340px',
-          height: '340px',
+          width: '480px',
+          height: '480px',
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(0,245,255,0.1) 0%, transparent 70%)',
           pointerEvents: 'none',
@@ -165,9 +164,16 @@ export default function Scene() {
         }}
       />
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 55 }}
+        camera={{ position: [0, 0, 5.5], fov: 58 }}
         gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'transparent',
+        }}
       >
         <SceneContent mouse={mouse} />
       </Canvas>

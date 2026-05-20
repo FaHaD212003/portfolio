@@ -36,7 +36,7 @@ const contactItems: ContactItem[] = [
     Icon: FaLinkedin,
     label: 'LinkedIn',
     value: 'Connect with me',
-    href: 'https://www.linkedin.com/in/fahad-sohail/',
+    href: 'https://www.linkedin.com/in/fahad-sohail-bb2090293/',
     color: '#0A66C2',
   },
   {
@@ -44,7 +44,7 @@ const contactItems: ContactItem[] = [
     Icon: FaGithub,
     label: 'GitHub',
     value: 'View my code',
-    href: 'https://github.com/fahadsohail',
+    href: 'https://github.com/FaHaD212003',
     color: '#ffffff',
   },
 ];
@@ -300,8 +300,8 @@ export default function Contact() {
           {/* Social icons row */}
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
             {[
-              { Icon: FaGithub, href: 'https://github.com/fahadsohail', label: 'GitHub', color: '#ffffff' },
-              { Icon: FaLinkedin, href: 'https://www.linkedin.com/in/fahad-sohail/', label: 'LinkedIn', color: '#0A66C2' },
+              { Icon: FaGithub, href: 'https://github.com/FaHaD212003', label: 'GitHub', color: '#ffffff' },
+              { Icon: FaLinkedin, href: 'https://www.linkedin.com/in/fahad-sohail-bb2090293/', label: 'LinkedIn', color: '#0A66C2' },
               { Icon: FaEnvelope, href: 'mailto:fahadsohail133@gmail.com', label: 'Email', color: '#00f5ff' },
             ].map(({ Icon, href, label, color }) => (
               <motion.a

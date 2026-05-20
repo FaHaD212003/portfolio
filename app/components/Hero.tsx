@@ -1,37 +1,13 @@
 'use client';
 
-import { Suspense, useRef } from 'react';
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 
 // Dynamically import to prevent SSR issues with Three.js
 const Scene = dynamic(() => import('./Scene'), {
   ssr: false,
-  loading: () => (
-    <div
-      style={{
-        width: '100%',
-        minHeight: '480px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '24px',
-        background: 'rgba(0, 245, 255, 0.03)',
-        border: '1px solid rgba(0, 245, 255, 0.1)',
-      }}
-    >
-      <div
-        style={{
-          width: '48px',
-          height: '48px',
-          border: '2px solid rgba(0, 245, 255, 0.2)',
-          borderTop: '2px solid #00f5ff',
-          borderRadius: '50%',
-          animation: 'spin-slow 1s linear infinite',
-        }}
-      />
-    </div>
-  ),
+  loading: () => null,
 });
 
 const containerVariants = {
@@ -59,63 +35,79 @@ export default function Hero() {
       id="hero"
       style={{
         minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '120px 24px 80px',
         position: 'relative',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
       }}
     >
-      {/* Background radial gradient */}
+      {/* ── LAYER 0: Full-section 3D background ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.4, delay: 0.2 }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+        }}
+      >
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
+      </motion.div>
+
+      {/* ── LAYER 1: Subtle gradient veil so text stays legible ── */}
       <div
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          inset: 0,
+          zIndex: 1,
           background:
-            'radial-gradient(ellipse 80% 60% at 70% 50%, rgba(0,245,255,0.04) 0%, transparent 70%)',
+            'linear-gradient(90deg, rgba(5,5,8,0.82) 0%, rgba(5,5,8,0.55) 50%, rgba(5,5,8,0.15) 100%)',
           pointerEvents: 'none',
         }}
       />
 
-      {/* Grid pattern overlay */}
+      {/* ── LAYER 2: Grid pattern ── */}
       <div
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          inset: 0,
+          zIndex: 1,
           backgroundImage: `
-            linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px)
+            linear-gradient(rgba(0,245,255,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,245,255,0.025) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
           pointerEvents: 'none',
-          maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%)',
+          maskImage:
+            'radial-gradient(ellipse 80% 80% at 30% 50%, black 0%, transparent 100%)',
+          WebkitMaskImage:
+            'radial-gradient(ellipse 80% 80% at 30% 50%, black 0%, transparent 100%)',
         }}
       />
 
+      {/* ── LAYER 3: Text content ── */}
       <div
         className="section-container"
         style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '64px',
-          alignItems: 'center',
+          position: 'relative',
+          zIndex: 2,
+          padding: '120px 24px 80px',
           width: '100%',
         }}
       >
-        {/* Left — Text Content */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}
-          className="hero-text-col"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '28px',
+            maxWidth: '580px',
+          }}
         >
           {/* Badge */}
           <motion.div variants={itemVariants}>
@@ -227,91 +219,38 @@ export default function Hero() {
               Contact Me
             </motion.a>
           </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            variants={itemVariants}
-            style={{
-              display: 'flex',
-              gap: '32px',
-              paddingTop: '8px',
-            }}
-          >
-            {[
-              { num: '4+', label: 'Projects Built' },
-              { num: '5+', label: 'Technologies' },
-              { num: '100%', label: 'Passion' },
-            ].map(({ num, label }) => (
-              <div key={label}>
-                <div
-                  style={{
-                    fontSize: '1.8rem',
-                    fontWeight: '800',
-                    color: 'var(--accent-cyan)',
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1,
-                  }}
-                >
-                  {num}
-                </div>
-                <div
-                  style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--text-muted)',
-                    marginTop: '4px',
-                    letterSpacing: '0.03em',
-                    textTransform: 'uppercase',
-                    fontWeight: '500',
-                  }}
-                >
-                  {label}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        {/* Right — 3D Canvas */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, x: 40 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          style={{ position: 'relative' }}
-          className="hero-canvas-col"
-        >
-          <Suspense fallback={null}>
-            <Scene />
-          </Suspense>
-
-          {/* Decorative rings */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '420px',
-              height: '420px',
-              borderRadius: '50%',
-              border: '1px solid rgba(0, 245, 255, 0.08)',
-              pointerEvents: 'none',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '520px',
-              height: '520px',
-              borderRadius: '50%',
-              border: '1px solid rgba(0, 245, 255, 0.04)',
-              pointerEvents: 'none',
-            }}
-          />
         </motion.div>
       </div>
+
+      {/* ── Decorative rings (centred in viewport) ── */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '60%',
+          transform: 'translate(-50%, -50%)',
+          width: '520px',
+          height: '520px',
+          borderRadius: '50%',
+          border: '1px solid rgba(0, 245, 255, 0.06)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '60%',
+          transform: 'translate(-50%, -50%)',
+          width: '700px',
+          height: '700px',
+          borderRadius: '50%',
+          border: '1px solid rgba(0, 245, 255, 0.03)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
 
       {/* Scroll indicator */}
       <motion.div
@@ -328,6 +267,7 @@ export default function Hero() {
           alignItems: 'center',
           gap: '8px',
           cursor: 'pointer',
+          zIndex: 2,
         }}
         onClick={() => {
           document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' });
@@ -356,26 +296,6 @@ export default function Hero() {
           </svg>
         </div>
       </motion.div>
-
-      <style>{`
-        @media (max-width: 900px) {
-          .hero-text-col, .hero-canvas-col {
-            grid-column: 1 / -1 !important;
-          }
-          section#hero > div.section-container {
-            grid-template-columns: 1fr !important;
-            gap: 48px !important;
-          }
-          .hero-canvas-col {
-            height: 380px;
-          }
-        }
-        @media (max-width: 480px) {
-          .hero-canvas-col {
-            height: 300px;
-          }
-        }
-      `}</style>
     </section>
   );
 }
